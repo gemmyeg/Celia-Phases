@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installed Input Prototype</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      padding: 30px;
+    }
+    .container {
+      width: 350px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #6a0dad;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    button:hover {
+      background: #580b99;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Installed Input</h2>
+
+    <label>Site Code</label>
+    <input type="text" id="siteCode" placeholder="Enter site code" />
+
+    <label>Account Number</label>
+    <input type="text" id="accountNumber" placeholder="Enter account number" />
+
+    <button onclick="sendData()">Submit</button>
+
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwl8Cda0pWDbgUsI9iesY92iUHKyuDNqHE1nyjQVrbRt4BoyHLbj-bRDvEuIplSTYuHnA/exec";
+
+    function sendData() {
+      const siteCode = document.getElementById("siteCode").value;
+      const accountNumber = document.getElementById("accountNumber").value;
+
+      if (!siteCode || !accountNumber) {
+        document.getElementById("status").innerText = "Please fill all fields.";
+        return;
+      }
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          siteCode: siteCode,
+          accountNumber: accountNumber
+        }),
+        headers: { "Content-Type": "application/json" },
+      })
+      .then(res => res.text())
+      .then(txt => {
+        if (txt === "SUCCESS") {
+          document.getElementById("status").innerText = "Saved successfully ✔";
+        } else {
+          document.getElementById("status").innerText = "Error: " + txt;
+        }
+      })
+      .catch(err => {
+        document.getElementById("status").innerText = "Network error";
+      });
+    }
+  </script>
+</body>
+</html>
